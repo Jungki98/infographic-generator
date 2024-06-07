@@ -1,0 +1,9 @@
+streamlit == 1.35.0
+pymysql == 1.1.0
+pillow == 10.3.0
+langchain == 0.2.2
+openai == 1.31.2
+langchain_openai == 0.1.8
+langchain_community == 0.2.3
+langchain_core == 0.2.4
+SQLAlchemy == 2.0.29
