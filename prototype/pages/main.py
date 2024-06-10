@@ -16,14 +16,19 @@ if 'login_nickname' not in st.session_state:
 if 'login_successful' not in st.session_state:
     st.session_state['login_successful'] = False
 
-login_nickname = st.session_state.login_nickname
-login_successful = st.session_state.login_successful
+login_nickname = st.session_state['login_nickname']
+login_successful = st.session_state['login_successful']
+
+if st.session_state['login_successful'] is True:
+    st.sidebar.write('Welcome!' + st.session_state['login_nickname'])
+    if st.sidebar.button('Logout'):
+        st.session_state['login_nickname'] = 'Unknown'
+        st.session_state['login_successful'] = False
+        st.switch_page('login.py')
 
 def main():
     if login_successful:
         st.title('Infographic Generator :frame_with_picture:')
-        st.write('Welcome! ' + login_nickname)
-        st.text("<www.pexels.com> Background Photos provided by pexels")
         st.divider()
 
         if 'slides' not in st.session_state:
