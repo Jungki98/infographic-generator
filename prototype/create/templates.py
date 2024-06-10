@@ -1,5 +1,46 @@
 from create import image as img_module
-from create import text
+import streamlit as st
+from langchain_core.prompts import PromptTemplate
+import re
+from langchain_openai import OpenAI
+from . import text
+
+api_key = st.secrets["OPENAI_API_KEY"]
+
+# Template_AI
+def colorNumber(options):
+    colorNumber_template = PromptTemplate.from_template(
+    """
+    You are the AI that chooses Color Pallette Number.
+    Choose the color palette associated with the entered {text} from the color set and return the number. 
+    
+    ColorSet = [
+        [(255, 166, 248), (196, 49, 184), (125, 0, 115)], # 완전 보라   =>   0
+        [(227, 191, 255), (146, 87, 194), (59, 18, 92)], # 자색 계열     =>   1
+        [(202, 214, 250), (84, 114, 209), (7, 28, 89)], # 파랑 계열       =>  2
+        [(204, 237, 255), (68, 138, 166), (37, 50, 89)], # 파랑 계열    =>    3
+        [(186, 235, 255), (61, 169, 212), (16, 94, 125)], # 푸른 계열   =>    4
+        [(194, 255, 255), (44, 199, 199), (6, 117, 117)], # 미쿠 색감   =>    5
+        [(163, 255, 203), (72, 196, 126), (9, 110, 53)], # 녹색 계열(푸른)  =>  6
+        [(218, 255, 181), (129, 196, 63), (48, 97, 0)], # 녹색 계열      =>    7
+        [(254, 255, 184), (217, 219, 64), (126, 128, 10)], # 확실한 노랑 =>   8
+        [(242, 238, 228), (250, 213, 122), (168, 120, 0)], # 노랑 계열   =>   9
+        [(255, 212, 171), (255, 153, 55), (101, 61, 22)], # 주황 계열    =>   10
+        [(255, 212, 201), (222, 103, 73), (110, 29, 9)], # 주홍 계열     =>   11
+        [(247, 201, 212), (201, 71, 102), (122, 17, 42)], # 체리 색감    =>   12
+        [(255, 181, 181), (237, 83, 83), (156, 0, 0)], # 빨간 맛         =>   13
+    ]
+    
+    The output must return only a number, an integer between 0 and 13.
+    """,
+    )
+    llm = OpenAI(api_key=api_key,temperature=0)
+    result = llm(colorNumber_template.format(text=options))
+    number_match = re.search(r'\d+', result)
+    if number_match:
+        color_number = int(number_match.group())
+        if 0 <= color_number <= 13:
+            return color_number
 
 RED     =   (255, 0, 0)
 GREEN   =   (0, 255, 0)
@@ -82,7 +123,7 @@ def tempColor() :
 
 # tuple(ColorSet[colorNumber][0])
 
-def book1(subtitle = "서브 제목", title = "메인 제목", coverlabel = "2024년도 1학기", colorNumber = 3) :
+def book1(subtitle = " ", title = " ", coverlabel = " ", colorNumber = 3) :
     overlay_image = img_module.TextOverlayImage()
     # tuple(ColorSet[colorNumber][0])
     # tuple(ColorSet[colorNumber][1])
@@ -114,7 +155,7 @@ def book1(subtitle = "서브 제목", title = "메인 제목", coverlabel = "202
     overlay_image.add_text_box(title, 900, 700, WHITE, tuple(ColorSet[colorNumber][1]),font_path = "NanumGothicBold.ttf", font_size=300, limitsize=15)
     
     return overlay_image
-def book2(title = "봄 대동제", subtitle = "서브서브서브서브서브서브서브1", content1 = "내용1줄서브서브서브서브서브서브서브서브1", content2 = "내용2줄서브서브서브서브서브서브서브서브1", content3 = "내용3줄서브서브서브서브서브서브서브서브1", toplabel = "2024-1학기기1", colorNumber = 3) :
+def book2(title = " ", subtitle = " ", content1 = " ", content2 =" ", content3 = " ", toplabel = " ", colorNumber = 3) :
     overlay_image = img_module.TextOverlayImage()
     # tuple(ColorSet[colorNumber][0])
     # tuple(ColorSet[colorNumber][1])
@@ -192,7 +233,113 @@ def book2(title = "봄 대동제", subtitle = "서브서브서브서브서브서
 
     overlay_image.add_text_box(toplabel, 1020, 220, BLACK, (238, 238, 238),font_path = "Cursive.ttf", font_size=140, limitsize=30)
     return overlay_image
-def note1(toptitle = "Card News", bottitle = "DesignAA", labeltitle = "인포그래픽 AI 생성위원회 생성위원회 생성", colorNumber = 3):
+def book3(subtitle1 = " ",subtitle2 = " ", content1 = " ", content2 = " ", colorNumber = 2) :
+    overlay_image = img_module.TextOverlayImage()
+    overlay_image.add_box(0, 0, 1820, 2000, BLACK)
+    overlay_image.add_box(1820, 0, 180, 1990, (238, 238, 238))
+    overlay_image.add_box(15, 15, 1790, 1970, WHITE)
+    overlay_image.add_box(250, 0, 10, 1990, tuple(ColorSet[colorNumber][2]))
+    overlay_image.add_box(0, 10, 180, 1980,tuple(ColorSet[colorNumber][2]))
+    overlay_image.add_box(180, 0, 10, 1990, BLACK)
+    overlay_image.add_box(1990, 0, 10, 2000, BLACK)
+    overlay_image.add_triangle(2000, 0, 2000, 100, 1800, 0, BLACK)
+    overlay_image.add_triangle(2000, 0, 2000, 90, 1820, 0, WHITE)
+    overlay_image.add_triangle(2000, 2000, 2000, 1900, 1810, 1995, BLACK)
+    overlay_image.add_triangle(2000, 2000, 2000, 1910, 1820, 2000, WHITE)
+    overlay_image.add_box(1880, 80, 10, 1840, BLACK)
+    overlay_image.add_box(1940, 120, 8, 1760, BLACK)
+    overlay_image.add_box(1750, 900, 140+20, 450+20, BLACK)
+    overlay_image.add_box(1760, 910, 140, 450, tuple(ColorSet[colorNumber][1]))
+    overlay_image.add_box(1885, 500-5, 80+10, 250+10, BLACK)
+    overlay_image.add_box(1890, 500, 80, 250, tuple(ColorSet[colorNumber][0]))
+    overlay_image.add_box(380, 200, 1280, 730, BLACK)
+    overlay_image.add_box(390, 210, 1260, 710, (238, 238, 238))
+    overlay_image.add_box(845, 125, 360, 140, BLACK)
+    overlay_image.add_box(850, 130, 350, 130, (128, 128, 128))
+    overlay_image.add_box(850, 201, 350, 8, BLACK)  
+    overlay_image.add_circle(490, 460, 7, (128, 128, 128)) 
+    overlay_image.add_circle(520, 460, 7, (128, 128, 128))
+    overlay_image.add_circle(550, 460, 7, (128, 128, 128)) 
+    overlay_image.add_circle(580, 460, 7, (128, 128, 128))
+    overlay_image.add_circle(610, 460, 7, (128, 128, 128)) 
+    overlay_image.add_circle(640, 460, 7, (128, 128, 128))
+    overlay_image.add_circle(670, 460, 7, (128, 128, 128)) 
+    overlay_image.add_circle(700, 460, 7, (128, 128, 128))
+    overlay_image.add_circle(730, 460, 7, (128, 128, 128)) 
+    overlay_image.add_circle(760, 460, 7, (128, 128, 128))
+    overlay_image.add_circle(790, 460, 7, (128, 128, 128)) 
+    overlay_image.add_circle(820, 460, 7, (128, 128, 128))
+    overlay_image.add_circle(850, 460, 7, (128, 128, 128)) 
+    overlay_image.add_circle(880, 460, 7, (128, 128, 128))
+    overlay_image.add_circle(910, 460, 7, (128, 128, 128)) 
+    overlay_image.add_circle(940, 460, 7, (128, 128, 128))
+    overlay_image.add_circle(970, 460, 7, (128, 128, 128)) 
+    overlay_image.add_circle(1000, 460, 7, (128, 128, 128))
+    overlay_image.add_circle(1030, 460, 7, (128, 128, 128)) 
+    overlay_image.add_circle(1060, 460, 7, (128, 128, 128))
+    overlay_image.add_circle(1090, 460, 7, (128, 128, 128)) 
+    overlay_image.add_circle(1120, 460, 7, (128, 128, 128))
+    overlay_image.add_circle(1150, 460, 7, (128, 128, 128)) 
+    overlay_image.add_circle(1180, 460, 7, (128, 128, 128))
+    overlay_image.add_circle(1210, 460, 7, (128, 128, 128)) 
+    overlay_image.add_circle(1240, 460, 7, (128, 128, 128))
+    overlay_image.add_circle(1270, 460, 7, (128, 128, 128)) 
+    overlay_image.add_circle(1300, 460, 7, (128, 128, 128))
+    overlay_image.add_circle(1330, 460, 7, (128, 128, 128)) 
+    overlay_image.add_circle(1360, 460, 7, (128, 128, 128))
+    overlay_image.add_circle(1390, 460, 7, (128, 128, 128)) 
+    overlay_image.add_circle(1420, 460, 7, (128, 128, 128))
+    overlay_image.add_circle(1450, 460, 7, (128, 128, 128)) 
+    overlay_image.add_circle(1480, 460, 7, (128, 128, 128))
+    overlay_image.add_circle(1510, 460, 7, (128, 128, 128)) 
+    overlay_image.add_circle(1540, 460, 7, (128, 128, 128))
+    overlay_image.add_text_box(subtitle1, 1050, 300, BLACK, (238, 238, 238),font_path = "NanumGothicBold.ttf", font_size=100)
+    overlay_image.add_text_box(content1, 1000, 600, BLACK, (238, 238, 238),font_path = "NanumGothicBold.ttf", font_size=75)
+    overlay_image.add_box(380, 1100, 1280, 730, BLACK)
+    overlay_image.add_box(390, 1110, 1260, 710, (238, 238, 238))
+    overlay_image.add_box(845, 1025, 360, 140, BLACK)
+    overlay_image.add_box(850, 1030, 350, 130, (128, 128, 128))
+    overlay_image.add_box(850, 1101, 350, 8, BLACK)          
+    overlay_image.add_circle(490, 1350, 7, (128, 128, 128)) 
+    overlay_image.add_circle(520, 1350, 7, (128, 128, 128))
+    overlay_image.add_circle(550, 1350, 7, (128, 128, 128)) 
+    overlay_image.add_circle(580, 1350, 7, (128, 128, 128))
+    overlay_image.add_circle(610, 1350, 7, (128, 128, 128)) 
+    overlay_image.add_circle(640, 1350, 7, (128, 128, 128))
+    overlay_image.add_circle(670, 1350, 7, (128, 128, 128)) 
+    overlay_image.add_circle(700, 1350, 7, (128, 128, 128))
+    overlay_image.add_circle(730, 1350, 7, (128, 128, 128)) 
+    overlay_image.add_circle(760, 1350, 7, (128, 128, 128))
+    overlay_image.add_circle(790, 1350, 7, (128, 128, 128)) 
+    overlay_image.add_circle(820, 1350, 7, (128, 128, 128))
+    overlay_image.add_circle(850, 1350, 7, (128, 128, 128)) 
+    overlay_image.add_circle(880, 1350, 7, (128, 128, 128))
+    overlay_image.add_circle(910, 1350, 7, (128, 128, 128)) 
+    overlay_image.add_circle(940, 1350, 7, (128, 128, 128))
+    overlay_image.add_circle(970, 1350, 7, (128, 128, 128)) 
+    overlay_image.add_circle(1000, 1350, 7, (128, 128, 128))
+    overlay_image.add_circle(1030, 1350, 7, (128, 128, 128)) 
+    overlay_image.add_circle(1060, 1350, 7, (128, 128, 128))
+    overlay_image.add_circle(1090, 1350, 7, (128, 128, 128)) 
+    overlay_image.add_circle(1120, 1350, 7, (128, 128, 128))
+    overlay_image.add_circle(1150, 1350, 7, (128, 128, 128)) 
+    overlay_image.add_circle(1180, 1350, 7, (128, 128, 128))
+    overlay_image.add_circle(1210, 1350, 7, (128, 128, 128)) 
+    overlay_image.add_circle(1240, 1350, 7, (128, 128, 128))
+    overlay_image.add_circle(1270, 1350, 7, (128, 128, 128)) 
+    overlay_image.add_circle(1300, 1350, 7, (128, 128, 128))
+    overlay_image.add_circle(1330, 1350, 7, (128, 128, 128)) 
+    overlay_image.add_circle(1360, 1350, 7, (128, 128, 128))
+    overlay_image.add_circle(1390, 1350, 7, (128, 128, 128)) 
+    overlay_image.add_circle(1420, 1350, 7, (128, 128, 128))
+    overlay_image.add_circle(1450, 1350, 7, (128, 128, 128)) 
+    overlay_image.add_circle(1480, 1350, 7, (128, 128, 128))
+    overlay_image.add_circle(1510, 1350, 7, (128, 128, 128)) 
+    overlay_image.add_circle(1540, 1350, 7, (128, 128, 128))
+    overlay_image.add_text_box(subtitle2, 1050, 1200, BLACK, (238, 238, 238),font_path = "NanumGothicBold.ttf", font_size=100)
+    overlay_image.add_text_box(content2, 1000, 1500, BLACK, (238, 238, 238),font_path = "NanumGothicBold.ttf", font_size=75)
+    return overlay_image
+def note1(toptitle = " ", bottitle = " ", labeltitle = " ", colorNumber = 3):
     overlay_image = img_module.TextOverlayImage()
     # tuple(ColorSet[colorNumber][0])
     # tuple(ColorSet[colorNumber][1])
@@ -221,7 +368,7 @@ def note1(toptitle = "Card News", bottitle = "DesignAA", labeltitle = "인포그
     overlay_image.add_text_box(bottitle, 1000, 800, (242, 89, 34), tuple(ColorSet[colorNumber][0]), font_path = "NanumGothicBold.ttf", font_size=300, limitsize=16)
     overlay_image.add_text_box(labeltitle, 1000, 1800, WHITE, tuple(ColorSet[colorNumber][1]), font_path = "NanumGothicBold.ttf", font_size=100, limitsize=59)
     return overlay_image
-def note2(title = "동국대학교 대동제", uptitle = "공연 시간", cont11 = "AABBCCDDEEFF", cont12 = " B      .", cont13 = " C      .", downtitle = "공연 내용", cont21 = " A      .", cont22 = " B      .", cont23 = " C      .", colorNumber = 3) :
+def note2(title = " ", uptitle = " ", cont11 = " ", cont12 = " ", cont13 = " ", downtitle = " ", cont21 = " ", cont22 = " ", cont23 = " ", colorNumber = 3) :
     overlay_image = img_module.TextOverlayImage()
     # tuple(ColorSet[colorNumber][0])
     # tuple(ColorSet[colorNumber][1])
@@ -257,7 +404,7 @@ def note2(title = "동국대학교 대동제", uptitle = "공연 시간", cont11
     overlay_image.add_text_box(cont22, 700-30, 1310, BLACK, tuple(ColorSet[colorNumber][0]), font_size=90, limitsize=24)
     overlay_image.add_text_box(cont23, 700-30, 1430, BLACK, tuple(ColorSet[colorNumber][0]), font_size=90, limitsize=24)
     return overlay_image
-def note3(title = "카드뉴스 주제", upsub = "Detail1", downsub = "Detail2", cont1 = "AAAAA", cont2 = "AAAAA", label = "인포그래픽 AI 생성 위원회", colorNumber = 3):
+def note3(title = " ", upsub = " ", downsub = " ", cont1 = " ", cont2 = " ", label = " ", colorNumber = 3):
     overlay_image = img_module.TextOverlayImage()
     # tuple(ColorSet[colorNumber][0])
     # tuple(ColorSet[colorNumber][1])
@@ -288,7 +435,7 @@ def note3(title = "카드뉴스 주제", upsub = "Detail1", downsub = "Detail2",
     overlay_image.add_text_box(cont2, 700, 1280, tuple(ColorSet[colorNumber][2]), tuple(ColorSet[colorNumber][0]), font_path = "NanumGothicBold.ttf", font_size=80, limitsize=28)
     overlay_image.add_text_box(label, 1000, 1800, WHITE, tuple(ColorSet[colorNumber][1]), font_path = "NanumGothicBold.ttf", font_size=100, limitsize=59)
     return overlay_image
-def post_it1(toplabel = "동국대학교", title1 = "카드뉴스", title2 = "디자인제작", botlabel = "Infographic Generator", colorNumber = 8):
+def post_it1(toplabel = " ", title1 = " ", title2 = " ", botlabel = "Infographic Generator", colorNumber = 8):
     overlay_image = img_module.TextOverlayImage()
     # tuple(ColorSet[colorNumber][0])
     # tuple(ColorSet[colorNumber][1])
@@ -299,12 +446,12 @@ def post_it1(toplabel = "동국대학교", title1 = "카드뉴스", title2 = "�
     overlay_image.add_triangle(1860, 1760, 1750, 1760, 1680, 1870, BLACK)
     overlay_image.add_box(450, 600, 1100, 4, BLACK)
     
-    overlay_image.add_text_box("동국대학교", 1000, 460, BLACK, tuple(ColorSet[colorNumber][1]), font_path = "NanumGothicBold.ttf", font_size=100)
-    overlay_image.add_text_box("카드뉴스", 1000, 780, BLACK, tuple(ColorSet[colorNumber][1]), font_path = "NanumGothicBold.ttf", font_size=300, limitsize=18)
-    overlay_image.add_text_box("디자인제작", 1000, 1200, BLACK, tuple(ColorSet[colorNumber][1]), font_path = "NanumGothicBold.ttf", font_size=290, limitsize=18)                      
-    overlay_image.add_text_box("Infographic Generator", 1000, 1850, BLACK, tuple(ColorSet[colorNumber][0]), font_path = "NanumGothicBold.ttf", font_size=80)
+    overlay_image.add_text_box(toplabel, 1000, 460, BLACK, tuple(ColorSet[colorNumber][1]), font_path = "NanumGothicBold.ttf", font_size=100)
+    overlay_image.add_text_box(title1, 1000, 780, BLACK, tuple(ColorSet[colorNumber][1]), font_path = "NanumGothicBold.ttf", font_size=300, limitsize=18)
+    overlay_image.add_text_box(title2, 1000, 1200, BLACK, tuple(ColorSet[colorNumber][1]), font_path = "NanumGothicBold.ttf", font_size=290, limitsize=18)                      
+    overlay_image.add_text_box(botlabel, 1000, 1850, BLACK, tuple(ColorSet[colorNumber][0]), font_path = "NanumGothicBold.ttf", font_size=80)
     return overlay_image
-def post_it2(title = "동국대학교 대동제", subtitle1 = "축제 시간", content1 = "가나다", subtitle2 = "축제 장소", content2 = "가나다", subtitle3 = "세부 사항", content3 = "가나다", colorNumber = 11):
+def post_it2(title = " ", subtitle1 = " ", content1 = " ", subtitle2 = " ", content2 = " ", subtitle3 = " ", content3 = " ", colorNumber = 11):
     overlay_image = img_module.TextOverlayImage()
     # tuple(ColorSet[colorNumber][0])
     # tuple(ColorSet[colorNumber][1])
@@ -328,7 +475,7 @@ def post_it2(title = "동국대학교 대동제", subtitle1 = "축제 시간", c
     overlay_image.add_text_box(subtitle3, 575, 1325, BLACK, tuple(ColorSet[colorNumber][0]), font_size=110, limitsize=20)
     overlay_image.add_text_box(content3, 575, 1555, BLACK, tuple(ColorSet[colorNumber][0]), font_size=90, limitsize=30)
     return overlay_image
-def post_it3(title = "동국대학교 대동제", subtitle1 = "축제 시간", subtitle2 = "축제 장소", subtitle3 = "축제 안내", ct11 = "A", ct12 = "B", ct13 = "C", colorNumber = 11):
+def post_it3(title = " ", subtitle1 = " ", subtitle2 = " ", subtitle3 = " ", ct11 = " ", ct12 = " ", ct13 = " ", colorNumber = 11):
     overlay_image = img_module.TextOverlayImage()
     # tuple(ColorSet[colorNumber][0])
     # tuple(ColorSet[colorNumber][1])
@@ -354,7 +501,7 @@ def post_it3(title = "동국대학교 대동제", subtitle1 = "축제 시간", s
     overlay_image.add_circle(305, 1430, 20, BLACK)
 
     return overlay_image
-def post_it4(title="동국대학교 대동제", sub1="축제 시간", cont11="A", cont12="A", cont13="A", sub2="축제 장소", cont21="A", cont22="A", cont23="A", sub3="세부 사항", cont31="A", cont32="A", cont33="A", colorNumber = 13):
+def post_it4(title=" ", sub1=" ", cont11=" ", cont12=" ", cont13=" ", sub2=" ", cont21=" ", cont22=" ", cont23=" ", sub3=" ", cont31=" ", cont32=" ", cont33=" ", colorNumber = 13):
     overlay_image = img_module.TextOverlayImage()
     # tuple(ColorSet[colorNumber][0])
     # tuple(ColorSet[colorNumber][1])
@@ -387,7 +534,7 @@ def post_it4(title="동국대학교 대동제", sub1="축제 시간", cont11="A"
     overlay_image.add_text_box(cont33, 1000, 1665, BLACK, (254, 225, 232), font_size=90)
 
     return overlay_image
-def cover1(uptitle = "가나다", downtitle = "라마바사", subtitle = "가나다 라마 바사", colorNumber = 8):
+def cover1(uptitle = " ", downtitle = " ", subtitle = " ", colorNumber = 8):
     overlay_image = img_module.TextOverlayImage()
     # tuple(ColorSet[colorNumber][0])
     # tuple(ColorSet[colorNumber][1])
@@ -420,7 +567,7 @@ def cover1(uptitle = "가나다", downtitle = "라마바사", subtitle = "가나
     overlay_image.add_text_box(downtitle, 1000, 850, tuple(ColorSet[colorNumber][2]), WHITE, font_path = "NanumGothicBold.ttf", font_size=250, limitsize=15)
     
     return overlay_image
-def cover2(uptitle = "Card News", maintitle = "Design", label = "어떻게해야 잘 살 수 있을까", colorNumber = 11):
+def cover2(uptitle = " ", maintitle = " ", label = " ", colorNumber = 11):
     overlay_image = img_module.TextOverlayImage()
     # tuple(ColorSet[colorNumber][0])
     # tuple(ColorSet[colorNumber][1])
@@ -467,7 +614,7 @@ def cover2(uptitle = "Card News", maintitle = "Design", label = "어떻게해야
     overlay_image.add_text_box(maintitle, 1000, 800, tuple(ColorSet[colorNumber][2]), (244, 241, 234), font_path = "NanumGothicBold.ttf", font_size=300, limitsize=15)
     overlay_image.add_text_box(label, 1000, 1400, tuple(ColorSet[colorNumber][2]), (244, 241, 234), font_path = "NanumGothicBold.ttf", font_size=100, limitsize=45)
     return overlay_image
-def cover3(uptitle = "Card News", maintitle = "Design", signal = "TIP", colorNumber = 11):
+def cover3(uptitle = " ", maintitle = " ", signal = " ", colorNumber = 11):
     overlay_image = img_module.TextOverlayImage()
     # tuple(ColorSet[colorNumber][0])
     # tuple(ColorSet[colorNumber][1])
@@ -484,7 +631,7 @@ def cover3(uptitle = "Card News", maintitle = "Design", signal = "TIP", colorNum
     overlay_image.add_text_box(maintitle, 1000, 800, WHITE, tuple(ColorSet[colorNumber][1]), font_path = "NanumGothicBold.ttf", font_size=300, limitsize=14)
     overlay_image.add_text_box(signal, 1000, 1200, WHITE, tuple(ColorSet[colorNumber][1]), font_path = "NanumGothicBold.ttf", font_size=400, limitsize=10)
     return overlay_image
-def cover4(uptitle="가나다", maintitle="라마바사", subtitle="가나다라 마바사", label="Infographic Generator", colorNumber = 3):
+def cover4(uptitle=" ", maintitle=" ", subtitle=" ", label="Infographic Generator", colorNumber = 3):
     overlay_image = img_module.TextOverlayImage()
     # tuple(ColorSet[colorNumber][0])
     # tuple(ColorSet[colorNumber][1])
@@ -504,7 +651,7 @@ def cover4(uptitle="가나다", maintitle="라마바사", subtitle="가나다라
     overlay_image.add_text_box(subtitle, 1000, 1250, BLACK, (249, 249, 249), font_path = "NanumGothicBold.ttf", font_size=80)  
     overlay_image.add_text_box(label, 1000, 1500, tuple(ColorSet[colorNumber][2]), (249, 249, 249), font_path = "NanumGothicBold.ttf", font_size=80)
     return overlay_image
-def content1(title = "동국대학교 봄 대동제", subtitle1 = "일시", subtitle2 = "장소",subtitle3 = "유의 사항", ct1 = "5월 21일", ct2 = "대운동장", ct3 = "가라마", label = "Infographic Generator", colorNumber = 11):
+def content1(title = " ", sub1 = " ", sub2 = " ",sub3 = " ", ct1 = " ", ct2 = " ", ct3 = " ", label = "Infographic Generator", colorNumber = 11):
     overlay_image = img_module.TextOverlayImage()
     # tuple(ColorSet[colorNumber][0])
     # tuple(ColorSet[colorNumber][1])
@@ -527,15 +674,15 @@ def content1(title = "동국대학교 봄 대동제", subtitle1 = "일시", subt
     overlay_image.add_box(800, 1425, 400, 120, tuple(ColorSet[colorNumber][2]))
                     
     overlay_image.add_text_box(title, 1000, 250, WHITE, tuple(ColorSet[colorNumber][1]), font_path = "NanumGothicBold.ttf", font_size=210, limitsize=30)
-    overlay_image.add_text_box(subtitle1, 1000, 710, WHITE, tuple(ColorSet[colorNumber][2]), font_path = "NanumGothicBold.ttf", font_size=80, limitsize=16)
+    overlay_image.add_text_box(sub1, 1000, 710, WHITE, tuple(ColorSet[colorNumber][2]), font_path = "NanumGothicBold.ttf", font_size=80, limitsize=16)
     overlay_image.add_text_box(ct1, 1000, 870, BLACK, tuple(ColorSet[colorNumber][0]), font_path = "NanumGothicBold.ttf", font_size=75, limitsize=60)
-    overlay_image.add_text_box(subtitle2, 1000, 1070, WHITE, tuple(ColorSet[colorNumber][2]), font_path = "NanumGothicBold.ttf", font_size=80, limitsize=16)
+    overlay_image.add_text_box(sub2, 1000, 1070, WHITE, tuple(ColorSet[colorNumber][2]), font_path = "NanumGothicBold.ttf", font_size=80, limitsize=16)
     overlay_image.add_text_box(ct2, 1000, 1230, BLACK, tuple(ColorSet[colorNumber][0]), font_path = "NanumGothicBold.ttf", font_size=75, limitsize=60)
-    overlay_image.add_text_box(subtitle3, 1000, 1430, WHITE, tuple(ColorSet[colorNumber][2]), font_path = "NanumGothicBold.ttf", font_size=80, limitsize=16)
+    overlay_image.add_text_box(sub3, 1000, 1430, WHITE, tuple(ColorSet[colorNumber][2]), font_path = "NanumGothicBold.ttf", font_size=80, limitsize=16)
     overlay_image.add_text_box(ct3, 1000, 1590, BLACK, tuple(ColorSet[colorNumber][0]), font_path = "NanumGothicBold.ttf", font_size=75, limitsize=60)
     overlay_image.add_text_box(label, 1000, 1850, WHITE, tuple(ColorSet[colorNumber][1]), font_path = "NanumGothicBold.ttf", font_size=80)
     return overlay_image
-def content2(title = "동아리 박람회", sub1 ="일시", sub2 ="장소", sub3 ="관련 문의", ct1 = "3월 21일", ct2 = "만해광장", ct3 = "010-0000-0000", label = "Infographic Generator", colorNumber = 13):
+def content2(title = " ", sub1 =" ", sub2 =" ", sub3 =" ", ct1 = " ", ct2 = " ", ct3 = " ", label = "Infographic Generator", colorNumber = 13):
     overlay_image = img_module.TextOverlayImage()
     # tuple(ColorSet[colorNumber][0])
     # tuple(ColorSet[colorNumber][1])
@@ -587,7 +734,7 @@ def content2(title = "동아리 박람회", sub1 ="일시", sub2 ="장소", sub3
     overlay_image.add_text_box(ct3, 1200, 1300, BLACK, (244, 241, 234), font_path = "NanumGothicBold.ttf", font_size=110, limitsize=25)
     overlay_image.add_text_box(label, 1000, 1700, tuple(ColorSet[colorNumber][2]), (244, 241, 234), font_path = "NanumGothicBold.ttf", font_size=90)
     return overlay_image
-def content3(title = "취업설명회", sub1 ="일시", sub2 ="장소", sub3 ="관련 문의", ct1 = "3월 21일", ct2 = "신공학관", ct3 = "010-0000-0000", subtitle = "동국대학교 정보통신공학과", colorNumber = 3):
+def content3(title = " ", sub1 =" ", sub2 =" ", sub3 =" ", ct1 = " ", ct2 = " ", ct3 = " ", label = "Infographic Generator", colorNumber = 3):
  
     overlay_image = img_module.TextOverlayImage()
     # tuple(ColorSet[colorNumber][0])
@@ -599,12 +746,12 @@ def content3(title = "취업설명회", sub1 ="일시", sub2 ="장소", sub3 ="�
     overlay_image.add_text_box(sub1, 1000, 700, tuple(ColorSet[colorNumber][2]), tuple(ColorSet[colorNumber][0]), font_path = "NanumGothicBold.ttf", font_size=110)
     overlay_image.add_text_box(sub2, 1000, 1050, tuple(ColorSet[colorNumber][2]), tuple(ColorSet[colorNumber][0]), font_path = "NanumGothicBold.ttf", font_size=110)
     overlay_image.add_text_box(sub3, 1000, 1650, BLACK, tuple(ColorSet[colorNumber][1]), font_path = "NanumGothicBold.ttf", font_size=70)
-    overlay_image.add_text_box(subtitle, 1000, 1500, WHITE, tuple(ColorSet[colorNumber][1]), font_path = "NanumGothicBold.ttf", font_size=90)
+    overlay_image.add_text_box(label, 1000, 1500, WHITE, tuple(ColorSet[colorNumber][1]), font_path = "NanumGothicBold.ttf", font_size=90)
     overlay_image.add_text_box(ct1, 1000, 850, tuple(ColorSet[colorNumber][2]), tuple(ColorSet[colorNumber][0]), font_path = "NanumGothicBold.ttf", font_size=90)
     overlay_image.add_text_box(ct2, 1000, 1195, tuple(ColorSet[colorNumber][2]), tuple(ColorSet[colorNumber][0]), font_path = "NanumGothicBold.ttf", font_size=90, limitsize=30)
     overlay_image.add_text_box(ct3, 1000, 1750, BLACK, tuple(ColorSet[colorNumber][1]), font_path = "NanumGothicBold.ttf", font_size=60)
     return overlay_image
-def content4(title = "“취업설명회”", sub1 ="일시가", sub2 ="장소", sub3 ="내용", ct1 = "3월 21일", ct2 = "동국대학교가", ct3 = "가나다라", label = "Infographic Generator", colorNumber = 3):
+def content4(title = " ", sub1 =" " , sub2 =" ", sub3 =" ", ct1 = " ", ct2 = " ", ct3 = " ", label = "Infographic Generator", colorNumber = 3):
 
     overlay_image = img_module.TextOverlayImage()
     # tuple(ColorSet[colorNumber][0])
