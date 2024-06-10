@@ -28,6 +28,13 @@ if 'login_nickname' not in st.session_state:
 if 'login_successful' not in st.session_state:
     st.session_state['login_successful'] = False
 
+if st.session_state['login_successful'] is True:
+    st.sidebar.write('Welcome!' + st.session_state['login_nickname'])
+    if st.sidebar.button('Logout'):
+        st.session_state['login_nickname'] = 'Unknown'
+        st.session_state['login_successful'] = False
+        st.switch_page('login.py')
+
 with tab1:
     st.text('You only can use the service after login')
     st.divider()
