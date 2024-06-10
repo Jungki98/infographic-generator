@@ -1,7 +1,6 @@
 from . import text as tx
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
-import random
 import io
 import os
 import math
@@ -111,4 +110,4 @@ class TextOverlayImage:
         byte_io = io.BytesIO()
         self.image.save(byte_io, format='JPEG')
         byte_array = byte_io.getvalue()
-        return byte_array        
+        return byte_array              
