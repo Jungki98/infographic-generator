@@ -106,8 +106,8 @@ with tab2:
             if agree:
                 connection = pymysql.connect(**db_config)
                 cursor = connection.cursor()
-                query = 'INSERT INTO user_account(name, birthday, id, password, salt, email) VALUES(%s, %s, %s, %s, %s, %s)'
-                cursor.execute(query, (new_name, new_birthday, new_id, hashed_password, salt, new_email))
+                query = 'INSERT INTO user_account(name, birthday, id, password, salt, email,ethics_check) VALUES(%s, %s, %s, %s, %s, %s, %s)'
+                cursor.execute(query, (new_name, new_birthday, new_id, hashed_password, salt, new_email, agree))
                 connection.commit()
                 st.success('Successful Account Creating!')
             else:
