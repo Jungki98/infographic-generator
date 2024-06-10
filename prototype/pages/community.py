@@ -4,7 +4,21 @@ import pymysql
 import datetime
 from sqlalchemy import create_engine 
 
-login_nickname = st.session_state.login_nickname
+if 'login_nickname' not in st.session_state:
+    st.session_state['login_nickname'] = 'Unknown'
+
+if 'login_successful' not in st.session_state:
+    st.session_state['login_successful'] = False
+
+login_nickname = st.session_state['login_nickname']
+login_successful = st.session_state['login_successful']
+
+if st.session_state['login_successful'] is True:
+    st.sidebar.write('Welcome!' + st.session_state['login_nickname'])
+    if st.sidebar.button('Logout'):
+        st.session_state['login_nickname'] = 'Unknown'
+        st.session_state['login_successful'] = False
+        st.switch_page('login.py')
 
 db_host = st.secrets["database"]["host"]
 db_port = st.secrets["database"]["port"]
@@ -78,12 +92,7 @@ def comment_view():
 tab1,tab2 = st.tabs(['Comment View','Comment Writing'])
 
 with tab1:
-    if login_nickname == 'Unknown':
-        comment_view()
-            
-    else:
-        st.write('Welcome! ' + login_nickname)
-        comment_view()
+    comment_view()
 
 with tab2:
     if login_nickname != 'Unknown':
