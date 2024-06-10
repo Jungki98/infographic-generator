@@ -92,6 +92,15 @@ with tab2:
     salt, hashed_password = hash.hash_password(new_password)
     new_email = st.text_input('Your E-mail Address', '', key='create_email')
 
+    container = st.container(border=True)
+    container.write('우리는 비윤리적이거나 비사회적인 목적으로 본 서비스를 이용하는 것을 삼가합니다.')
+    container.write('본 서비스를 비윤리적, 비사회적 목적으로 이용할 경우 책임은 이용자에게 있음을 명시합니다.') 
+    container.write('이에 동의하시면 확인란을 선택해 주세요.')
+    container.write('We refrain from using this service for unethical or unsocial purposes.') 
+    container.write('It is stated that the user is responsible for using this service for unethical and unsocial purposes.') 
+    container.write('If you agree to this, please check the box.')
+    agree = container.checkbox('동의합니다(I Agree!)')
+
     if st.button('Create Account'):
         try:
             connection = pymysql.connect(**db_config)
