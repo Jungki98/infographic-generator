@@ -109,19 +109,19 @@ with tab2:
     agree = container.checkbox('동의합니다(I Agree!)')
 
     if st.button('Create Account'):
-        try:
-            if agree:
+        if agree:
+            try:
                 connection = pymysql.connect(**db_config)
                 cursor = connection.cursor()
                 query = 'INSERT INTO user_account(name, birthday, id, password, salt, email,ethics_check) VALUES(%s, %s, %s, %s, %s, %s, %s)'
                 cursor.execute(query, (new_name, new_birthday, new_id, hashed_password, salt, new_email, agree))
                 connection.commit()
                 st.success('Successful Account Creating!')
-            else:
-                st.warning('윤리적 사용 목적 동의 체크를 해주세요.(Please check that you agree to the purpose of ethical use.)') 
-        except pymysql.Error as e:
-            st.error(f'An error occurred: {e}')
-        finally:
-            if connection:
-                cursor.close()
-                connection.close()
+            except pymysql.Error as e:
+                st.error(f'An error occurred: {e}')
+            finally:
+                if connection:
+                    cursor.close()
+                    connection.close()
+        else:
+                st.warning('윤리적 사용 목적 동의 체크를 해주세요.(Please check that you agree to the purpose of ethical use.)')
