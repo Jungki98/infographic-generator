@@ -97,6 +97,7 @@ with tab1:
 
 with tab2:
     if login_nickname != 'Unknown':
+        st.write('작성한 글이 커뮤니티에 올라오는데 시간이 조금 필요합니다.')
         input_id = login_nickname
         input_comment_title = st.text_input('Commnent Title','', key='comment_title')
         input_comment = st.text_area('Your Comment','', key='comment')
@@ -110,7 +111,6 @@ with tab2:
                 cursor.execute(query, (input_id, input_comment_title, input_comment, input_date))
                 connection.commit()
                 st.success('Successful Comment Submit!')
-                st.experimental_rerun()
             except pymysql.Error as e:
                 st.error(f'An error occurred: {e}')
             finally:
