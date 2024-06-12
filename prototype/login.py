@@ -80,7 +80,41 @@ with tab1:
                 connection.close()
 
     if st.button('Community'):
-        st.switch_page('pages/community.py')
+        try:
+            connection = pymysql.connect(**db_config)
+            cursor = connection.cursor()
+            query = 'SELECT id, password, salt FROM user_account'
+            cursor.execute(query)
+            result = cursor.fetchall()
+
+            login_successful = False
+
+            for row in result:
+                find_id = row[0]
+                find_password = row[1]
+                find_salt = row[2]
+
+                if (find_id == login_id) and (hash.check_password(login_password, find_salt, find_password)):
+                    login_successful = True
+                    login_nickname = find_id
+                    break
+
+            if login_successful:
+                st.success('Login Success! Welcome ' + login_nickname + '! Please wait a second')
+                time.sleep(3)
+                st.session_state['login_successful'] = True
+                st.session_state['login_nickname'] = login_nickname
+                st.switch_page('pages/community.py')
+            else:
+                st.error('Login Error! Please check your ID and password.')
+
+        except pymysql.Error as e:
+            st.error(f'An error occurred: {e}')
+
+        finally:
+            if connection:
+                cursor.close()
+                connection.close()
 
 with tab2:
     st.text('Create New Account for using this Service')
