@@ -110,8 +110,6 @@ with tab2:
                 cursor.execute(query, (input_id, input_comment_title, input_comment, input_date))
                 connection.commit()
                 st.success('Successful Comment Submit!')
-                st.rerun()
-                st.switch_page('pages/community.py)
             except pymysql.Error as e:
                 st.error(f'An error occurred: {e}')
             finally:
