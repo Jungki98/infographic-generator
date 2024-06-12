@@ -29,7 +29,7 @@ if st.session_state['login_successful'] is True:
 def main():
     if login_successful:
         st.title('Infographic Generator :frame_with_picture:')
-        st.write('원하는 결과물이 아닐때는 생성버튼을 한번 눌러주세요!')
+        st.write('원하는 결과물이 아닐때는 생성버튼을 한번 더 눌러주세요!')
         st.divider()
 
         if 'slides' not in st.session_state:
