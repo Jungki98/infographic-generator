@@ -97,7 +97,6 @@ with tab1:
 
 with tab2:
     if login_nickname != 'Unknown':
-        st.write('작성한 글이 커뮤니티에 올라오는데 시간이 조금 필요합니다.')
         input_id = login_nickname
         input_comment_title = st.text_input('Commnent Title','', key='comment_title')
         input_comment = st.text_area('Your Comment','', key='comment')
