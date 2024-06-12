@@ -111,7 +111,7 @@ with tab2:
                 connection.commit()
                 st.success('Successful Comment Submit!')
                 st.rerun()
-                st.switch_page('/pages/community.py)
+                st.switch_page('pages/community.py)
             except pymysql.Error as e:
                 st.error(f'An error occurred: {e}')
             finally:
