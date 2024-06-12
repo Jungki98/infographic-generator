@@ -92,6 +92,7 @@ def comment_view():
 tab1,tab2 = st.tabs(['Comment View','Comment Writing'])
 
 with tab1:
+    st.write('자세한 내용은 줄의 체크박스를 누르면 확인가능합니다!')
     comment_view()
 
 with tab2:
