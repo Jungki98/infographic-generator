@@ -73,19 +73,14 @@ def main():
                 for k, value in enumerate(text_list):
                     if k < len(keys):
                         text[keys[k]] = str(value)
-                
-                # title_split = [' ', ' ', ' ']
-                # title_split = text['title'].split()
-                # st.write(title_split)
-                
-                
+                            
                 #Color Pallete
                 colNumber = temp.colorNumber(options)
 
                 #Template Slide 
                 global first_temp
                 
-                if i==0:                                        ##첫번째 슬라이드 이미지
+                if i==0:                                ##첫번째 슬라이드 이미지
                     if st.session_state.num_inputs==1:  ##추가 한번만 했을때
                         overlay_image = get_content_image(text, colNumber)
                     else: 
@@ -138,13 +133,12 @@ def main():
                     else:
                         overlay_image = get_content_image(text, colNumber)
                 
-        
-
                 # 결과 및 다운로드
-                if overlay_image: 
-                    image_byte_array = overlay_image.save("output.jpg")
-                    st.image(image_byte_array)
-                    st.download_button(label=f"다운로드 {i+1}", data=image_byte_array, file_name=f"image_{i+1}.jpg")
+                if st.session_state.submit_clicked:
+                    if overlay_image: 
+                        image_byte_array = overlay_image.save("output.jpg")
+                        st.image(image_byte_array)
+                        st.download_button(label=f"다운로드 {i+1}", data=image_byte_array, file_name=f"image_{i+1}.jpg") 
     else:
         st.error('You have to login first!')
 
@@ -158,7 +152,8 @@ def inputform():
 
     with st.form("form"):
         for i in range(st.session_state.num_inputs):
-            slide_text = st.text_input(f"슬라이드 {i+1} 문장", key=f"text_{i}")
+            st.session_state.submit_clicked = False
+            slide_text = st.text_input(f"슬라이드 {i+1} 문장", placeholder = "입력예시 : 캡스톤디자인 / 6월13일 4시 / 신공학관5143", key=f"text_{i}")
 
             if i < len(st.session_state.slides):
                 st.session_state.slides[i] = {'text': slide_text}
@@ -167,6 +162,7 @@ def inputform():
 
         submit = st.form_submit_button("생성")
         if submit:
+            st.session_state.submit_clicked = True
             with st.spinner('Wait for it...'):
                 time.sleep(5)
 
